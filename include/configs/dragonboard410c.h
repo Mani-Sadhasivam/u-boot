@@ -61,7 +61,9 @@
 
 /* Environment - Boot*/
 #define CONFIG_BOOTARGS "console=ttyMSM0,115200n8"
-#define CONFIG_BOOTCOMMAND "run loadbootenv"
+#define CONFIG_BOOTCOMMAND \
+			"run loadbootenv;"\
+			"run loadoverlay"
 
 #define BOOT_TARGET_DEVICES(func) \
 	func(USB, usb, 0) \
@@ -106,17 +108,35 @@ REFLASH(dragonboard/u-boot.img, 8)\
 	"kernel_addr_r=0x81000000\0"\
 	"fdtfile=apq8016-sbc.dtb\0" \
 	"fdt_addr_r=0x83000000\0"\
-	"ramdisk_addr_r=0x84000000\0"\
+	"overlay_addr_r=0x83080000\0"\
 	"scriptaddr=0x90000000\0"\
 	"pxefile_addr_r=0x90100000\0"\
     "bootenv=/boot/uEnv.txt\0" \
     "loadbootenv=if ext4load mmc 1:1 ${scriptaddr} ${bootenv}; then " \
             "echo Loaded environment from ${bootenv}; " \
             "run importbootenv; "\
-			"boot;" \
         "fi;\0" \
     "importbootenv=echo Importing environment variables from uEnv.txt ...; " \
-        "env import -t $scriptaddr $filesize\0" \
+    "env import -t $scriptaddr $filesize\0" \
+    "loadoverlay=if test -n ${enable_overlay}; then " \
+            "if test -n ${overlay_path}; then " \
+                "echo debug: [overlay_path=${overlay_path}] ... ;" \
+                "if test -e mmc 1:1 ${overlay_path}; then " \
+                    "echo loading ${overlay_path} ...;" \
+                    "ext4load mmc 1:1 ${overlay_addr_r} ${overlay_path};" \
+					"ext4load mmc 1:1 ${fdt_addr_r} /boot/apq8016-sbc.dtb;" \
+                    "fdt addr ${fdt_addr_r};" \
+                    "fdt resize 0x60000;" \
+                    "fdt apply ${overlay_addr_r};" \
+                    "fdt resize 0x60000;" \
+                "else " \
+                    "echo unable to find [mmc 1:1 ${overlay_path}]...;" \
+                "fi; " \
+            "fi;"\
+    "else " \
+        "echo add [enable_overlay=1] to /boot/uEnv.txt to enable loading overlay...;" \
+    "fi;"\
+	"boot;\0"\
 	BOOTENV
 
 #define CONFIG_ENV_SIZE			0x2000
