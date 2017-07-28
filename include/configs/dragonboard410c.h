@@ -23,7 +23,7 @@
 #define CONFIG_SYS_TEXT_BASE		0x80080000
 #define CONFIG_SYS_INIT_SP_ADDR		(CONFIG_SYS_SDRAM_BASE + 0x7fff0)
 #define CONFIG_SYS_LOAD_ADDR		(CONFIG_SYS_SDRAM_BASE + 0x80000)
-#define CONFIG_SYS_BOOTM_LEN		0x1000000 /* 16MB max kernel size */
+#define CONFIG_SYS_BOOTM_LEN		0x1100000 /* 17MB max kernel size */
 
 /* UART */
 
@@ -61,6 +61,7 @@
 
 /* Environment - Boot*/
 #define CONFIG_BOOTARGS "console=ttyMSM0,115200n8"
+#define CONFIG_BOOTCOMMAND "run loadbootenv"
 
 #define BOOT_TARGET_DEVICES(func) \
 	func(USB, usb, 0) \
@@ -108,6 +109,14 @@ REFLASH(dragonboard/u-boot.img, 8)\
 	"ramdisk_addr_r=0x84000000\0"\
 	"scriptaddr=0x90000000\0"\
 	"pxefile_addr_r=0x90100000\0"\
+    "bootenv=/boot/uEnv.txt\0" \
+    "loadbootenv=if ext4load mmc 1:1 ${scriptaddr} ${bootenv}; then " \
+            "echo Loaded environment from ${bootenv}; " \
+            "run importbootenv; "\
+			"boot;" \
+        "fi;\0" \
+    "importbootenv=echo Importing environment variables from uEnv.txt ...; " \
+        "env import -t $scriptaddr $filesize\0" \
 	BOOTENV
 
 #define CONFIG_ENV_SIZE			0x2000
