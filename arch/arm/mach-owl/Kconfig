@@ -4,7 +4,7 @@ config SYS_SOC
 	default "owl"
 
 choice
-        prompt "Actions OWL SoCs board select"
+        prompt "Actions Semi OWL SoCs board select"
         optional
 
 config TARGET_BUBBLEGUM_96
