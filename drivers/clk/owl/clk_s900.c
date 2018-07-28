@@ -58,19 +58,32 @@ void owl_clk_init(struct owl_clk_priv *priv)
 	udelay(PLL_STABILITY_WAIT_US);
 }
 
-void owl_uart_clk_enable(struct owl_clk_priv *priv)
+void owl_clk_set(struct owl_clk_priv *priv, int clk_id, bool enable)
+{
+	phys_addr_t reg;
+	u32 idx;
+
+	reg  = priv->base + CMU_DEVCLKEN0 + (clk_id / 32) * 4;
+	idx = clk_id % 32;
+
+	if (enable)
+		setbits_le32(reg, BIT(idx));
+	else
+		clrbits_le32(reg, BIT(idx));
+}
+
+void owl_uart_clk_enable(struct owl_clk_priv *priv, int clk_id)
 {
 	/* Source HOSC for UART5 interface */
 	clrbits_le32(priv->base + CMU_UART5CLK, CMU_UARTCLK_SRC_DEVPLL);
-
 	/* Enable UART5 interface clock */
-	setbits_le32(priv->base + CMU_DEVCLKEN1, CMU_DEVCLKEN1_UART5);
+	owl_clk_set(priv, clk_id, true);
 }
 
-void owl_uart_clk_disable(struct owl_clk_priv *priv)
+void owl_uart_clk_disable(struct owl_clk_priv *priv, int clk_id)
 {
 	/* Disable UART5 interface clock */
-	clrbits_le32(priv->base + CMU_DEVCLKEN1, CMU_DEVCLKEN1_UART5);
+	owl_clk_set(priv, clk_id, false);
 }
 
 int owl_clk_enable(struct clk *clk)
@@ -79,7 +92,7 @@ int owl_clk_enable(struct clk *clk)
 
 	switch (clk->id) {
 	case CLOCK_UART5:
-		owl_uart_clk_enable(priv);
+		owl_uart_clk_enable(priv, clk->id);
 		break;
 	default:
 		return 0;
@@ -94,7 +107,7 @@ int owl_clk_disable(struct clk *clk)
 
 	switch (clk->id) {
 	case CLOCK_UART5:
-		owl_uart_clk_disable(priv);
+		owl_uart_clk_disable(priv, clk->id);
 		break;
 	default:
 		return 0;
