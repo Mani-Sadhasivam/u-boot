@@ -28,6 +28,21 @@ config TARGET_PUMA_RK3399
 	   * HDMI, eDP, MIPI-DSI, MIPI-DSI/CSI and MIPI-CSI
 	   * SPI, I2C, I2S, UART, GPIO, ...
 
+config TARGET_ROCK960_RK3399
+	bool "Vamrs Limited Rock960 board"
+	help
+	  Support for Rock960 board. This board complies with
+	  96Board Consumer Edition Specification.
+
+	  Features:
+	   * Rockchip RK3399 SoC (2xCortex A72, 4xCortex A53, ARM Mali T860MP4)
+	   * 2GiB/4GiB RAM
+	   * 16/32GB eMMC, uSD slot
+	   * WiFi, Bluetooth
+	   * 1x USB 3.0 type A, 1x USB 2.0 type A (host mode only), 1x USB 3.0 type C OTG
+	   * HDMI
+	   * 20-pin low speed and 40-pin high speed expanders, 6 LED, 3 buttons
+
 endchoice
 
 config SYS_SOC
@@ -38,5 +53,6 @@ config SYS_MALLOC_F_LEN
 
 source "board/rockchip/evb_rk3399/Kconfig"
 source "board/theobroma-systems/puma_rk3399/Kconfig"
+source "board/vamrs/rock960_rk3399/Kconfig"
 
 endif

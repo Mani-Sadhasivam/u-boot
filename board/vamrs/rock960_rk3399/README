@@ -1,0 +1,79 @@
+Introduction
+============
+
+Rock960 is a 96Boards Consumer Edition platform featuring the Rockchip
+RK3399 SoC.
+
+Rock960 features:
+	* CPU: ARMv8 64bit Big-Little architecture,
+		* Big: dual-core Cortex-A72
+		* Little: quad-core Cortex-A53
+		* IRAM: 200KB
+	* DRAM: 2GB/4GB LPDDR3 @ 1866MHz
+	* eMMC: 16/32GB eMMC 5.1
+	* PMU: RK808
+	* SD/MMC
+	* USB:
+		* 1x USB 3.0 type A, 1x USB 2.0 type A (host mode only) and
+		  1x USB 3.0 type C OTG
+	* Display:
+		* 1x HDMI 2.0(Type A - full) up to 4Kx2K@60Hz,
+		  1x 4L - MIPI DSI up to 1080p@60Hz,
+		  1x DP 1.2(Type C) up to 4Kx2K@60
+	* Camera: 2x 4-lane MIPI CSI
+	* PCI-E: 4- lane M.2 PCI-E 2.1
+	* Low Speed Expansion Connector
+	* High Speed Expansion Connector
+
+Here is the step-by-step to boot to U-Boot on rk3399.
+
+Get the Source and prebuild binary
+==================================
+
+  > git clone https://github.com/96rocks/rkbin.git
+  > git clone https://github.com/rockchip-linux/rkdeveloptool.git
+
+Compile the U-Boot
+==================
+
+  > cd ../u-boot
+  > export ARCH=arm64
+  > export CROSS_COMPILE=aarch64-linux-gnu-
+  > make rock960-rk3399_defconfig
+  > make
+
+Compile the rkdeveloptool
+=========================
+  Follow instructions in latest README
+  > cd ../rkdeveloptool
+  > autoreconf -i
+  > ./configure
+  > make
+  > sudo make install
+
+Package the image
+=================
+
+Package the image for Rockchip miniloader
+------------------------------------------
+  > cd ../rkbin
+  > ./tools/loaderimage --pack --uboot u-boot/u-boot-dtb.bin uboot.img 0x200000
+
+  > ../u-boot/tools/mkimage -n rk3399 -T rksd -d rk3399_ddr_933MHz_v1.08.bin idbloader.img
+  > cat ./rk33/rk3399_miniloader_v1.06.bin >> idbloader.img
+
+  Get uboot.img and idbloader.img in this step.
+
+Flash the image to eMMC
+=======================
+
+Flash the image with Rockchip miniloader
+----------------------------------------
+Power on(or reset with RESET KEY) with MASKROM KEY preesed, and then:
+  > rkdeveloptool db ./rk33/rk3399_loader_v1.08.106.bin
+  > rkdeveloptool wl 0x40 idbloader.img
+  > rkdeveloptool wl 0x4000 uboot.img
+  > rkdeveloptool wl 0x6000 ./img/rk3399/trust.img
+  > rkdeveloptool rd
+
+You should be able to get U-Boot log in console/UART2(baurdrate 1500000)
