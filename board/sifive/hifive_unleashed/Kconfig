@@ -1,0 +1,24 @@
+if TARGET_HIFIVE_UNLEASHED
+
+config SYS_CPU
+	default "u540-c000"
+
+config SYS_BOARD
+	default "hifive_unleashed"
+
+config SYS_VENDOR
+	default "sifive"
+
+config SYS_SOC
+	default "u540-c000"
+
+config SYS_CONFIG_NAME
+	default "hifive_unleashed"
+
+config ENV_SIZE
+	default 0x2000 if ENV_IS_IN_SPI_FLASH
+
+config ENV_OFFSET
+	default 0x140000 if ENV_IS_IN_SPI_FLASH
+
+endif

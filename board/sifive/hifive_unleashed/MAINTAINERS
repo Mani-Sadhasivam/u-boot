@@ -1,0 +1,6 @@
+HIFIVE_UNLEASHED BOARD
+M:	Manivannan Sadhasivam <manivannanece23@gmail.com>
+S:	Maintained
+F:	board/sifive/hifive1/
+F:	include/configs/hifive1.h
+F:	configs/hifive1_defconfig

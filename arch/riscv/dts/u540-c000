@@ -1,0 +1,145 @@
+/dts-v1/;
+
+/ {
+	#address-cells = <2>;
+	#size-cells = <2>;
+	compatible = "sifive,u540";
+	model = "sifive,u540-c000";
+
+	aliases {
+		uart0 = &serial0;
+	};
+
+	chosen {
+		bootargs = "console=ttyS0,115200n8 earlyprintk=uart8250-32bit,0xf0300000 debug loglevel=7";
+		stdout-path = "uart0:115200n8";
+	};
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		timebase-frequency = <10000000>;
+
+		cpu0: cpu@0 {
+			device_type = "cpu";
+			reg = <0>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64imac";
+			clock-frequency = <0>;
+
+			cpu0_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+			};
+		};
+
+		cpu1: cpu@1 {
+			device_type = "cpu";
+			reg = <1>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64imafdc";
+			mmu-type = "riscv,sv39";
+			clock-frequency = <0>;
+
+			cpu1_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+			};
+		};
+
+		cpu2: cpu@2 {
+			device_type = "cpu";
+			reg = <2>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64imafdc";
+			mmu-type = "riscv,sv39";
+			clock-frequency = <0>;
+
+			cpu2_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+			};
+		};
+
+		cpu3: cpu@3 {
+			device_type = "cpu";
+			reg = <3>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64imafdc";
+			mmu-type = "riscv,sv39";
+			clock-frequency = <0>;
+
+			cpu3_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+			};
+		};
+
+		cpu4: cpu@4 {
+			device_type = "cpu";
+			reg = <4>;
+			status = "okay";
+			compatible = "riscv";
+			riscv,isa = "rv64imafdc";
+			mmu-type = "riscv,sv39";
+			clock-frequency = <0>;
+
+			cpu4_intc: interrupt-controller {
+				#interrupt-cells = <1>;
+				interrupt-controller;
+				compatible = "riscv,cpu-intc";
+			};
+		};
+	};
+
+	memory@0 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x1f 0x80000000>;
+	};
+
+	soc {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		compatible = "sifive,riscv-u540-soc", "simple-bus";
+		ranges;
+
+		clint0: clint@2000000 {
+			compatible = "riscv,clint0";
+			interrupts-extended = <&cpu0_intc 3 &cpu0_intc 7 &cpu1_intc 3 &cpu1_intc 7 &cpu2_intc 3 &cpu2_intc 7 &cpu3_intc 3 &cpu3_intc 7 &cpu4_intc 3 &cpu4_intc 7>;
+			reg = <0x0 0x2000000 0x0 0x10000>;
+			reg-names = "control";
+		};
+
+		plic0: interrupt-controller@c000000 {
+			compatible = "riscv,plic0";
+			#address-cells = <2>;
+			#interrupt-cells = <2>;
+			interrupt-controller;
+			reg = <0x0 0xc000000 0x0 0x4000000>;
+			riscv,ndev=<31>;
+			interrupts-extended = <&cpu0_intc 11 &cpu1_intc 11 &cpu1_intc 9 &cpu2_intc 11 &cpu2_intc 9 &cpu3_intc 11 &cpu3_intc 9 &cpu4_intc 11 &cpu4_intc 9>;
+		};
+
+		serial0: serial@10010000 {
+			compatible = "sifive,uart0";
+			reg = <0x0 0x10010000 0x0 0x1000>;
+			interrupts = <5>;
+			interrupt-parent = <&plic0>;
+		};
+
+		serial1: serial@10011000 {
+			compatible = "sifive,uart0";
+			reg = <0x0 0x10011000 0x0 0x1000>;
+			interrupts = <6>;
+			interrupt-parent = <&plic0>;
+		};
+	};
+};

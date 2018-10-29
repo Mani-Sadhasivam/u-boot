@@ -14,10 +14,14 @@ config TARGET_AX25_AE350
 config TARGET_QEMU_VIRT
 	bool "Support QEMU Virt Board"
 
+config TARGET_U540_C000
+	bool "Support ux540-c000"
+
 endchoice
 
 source "board/AndesTech/ax25-ae350/Kconfig"
 source "board/emulation/qemu-riscv/Kconfig"
+source "board/sifive/hifive_unleashed/Kconfig"
 
 choice
 	prompt "CPU selection"
