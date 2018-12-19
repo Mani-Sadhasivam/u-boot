@@ -59,3 +59,9 @@
 &uart3 {
 	label = "LS-UART1";
 };
+
+&usb {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+	dr_mode = "otg";
+};
