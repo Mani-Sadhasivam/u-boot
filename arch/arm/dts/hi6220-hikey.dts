@@ -40,6 +40,19 @@
 	};
 };
 
+&mmc0 {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+	non-removable;
+	bus-width = <8>;
+};
+
+&mmc1 {
+	u-boot,dm-pre-reloc;
+	status = "okay";
+	bus-width = <4>;
+};
+
 &uart2 {
 	label = "LS-UART0";
 };
