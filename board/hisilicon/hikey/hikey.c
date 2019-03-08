@@ -364,6 +364,20 @@ static void hi6220_pmussi_init(void)
 	gpio_direction_output(0, 1);
 }
 
+static void hi6220_periph_reset(void)
+{
+	u32 data, bits;
+
+	/* Bring I2C0/I2C1/I2C2/SPI0 out of reset */
+	bits = PERI_RST3_I2C0 | PERI_RST3_I2C1 | PERI_RST3_I2C2 | PERI_RST3_SSP;
+	writel(bits, &peri_sc->rst3_dis);
+
+	/* Wait until the peripherals are out of reset */
+	do {
+		data = readl(&peri_sc->rst3_dis);
+	} while (data & bits);
+}
+
 int misc_init_r(void)
 {
 	return 0;
@@ -371,6 +385,8 @@ int misc_init_r(void)
 
 int board_init(void)
 {
+	hi6220_periph_reset();
+
 	return 0;
 }
 
