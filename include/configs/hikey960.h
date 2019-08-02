@@ -47,17 +47,20 @@
 #include <config_distro_bootcmd.h>
 
 #define CONFIG_EXTRA_ENV_SETTINGS	\
-				"kernel_name=Image\0"	\
-				"kernel_addr_r=0x00080000\0" \
-				"fdtfile=hi3660-hikey.dtb\0" \
-				"fdt_addr_r=0x02000000\0" \
+				"image=Image\0"	\
+				"fdtfile=hi3660-hikey960.dtb\0" \
+				"fdt_addr_r=0x10000000\0" \
+				"kernel_addr_r=0x11000000\0" \
+				"scriptaddr=0x00020000\0" \
 				"fdt_high=0xffffffffffffffff\0" \
 				"initrd_high=0xffffffffffffffff\0" \
 				BOOTENV
 
-/* Preserve environment on eMMC */
 #define CONFIG_ENV_SIZE			0x1000
-#define CONFIG_SYS_MMC_ENV_DEV		0	/* Use eMMC */
-#define CONFIG_SYS_MMC_ENV_PART		2	/* Use Boot1 partition */
+//#define CONFIG_SYS_MMC_ENV_DEV		0	/* Use eMMC */
+//#define CONFIG_SYS_MMC_ENV_PART		1	/* Use Boot1 partition */
+
+//remove
+#define CONFIG_SYS_MMC_MAX_BLK_COUNT	256
 
 #endif /* __HIKEY_H */

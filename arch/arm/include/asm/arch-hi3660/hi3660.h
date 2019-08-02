@@ -9,14 +9,17 @@
 
 #define HI3660_UART6_BASE			0xfff32000
 
-#define PMU_REG_BASE                            0xFFF34000
-#define SCTRL_REG_BASE                          0xFFF0A000
+#define PMU_REG_BASE                            0xfff34000
+#define PMIC_HARDWARE_CTRL0                     (PMU_REG_BASE + (0x0C5 << 2))
+#define PMIC_OSC32K_ONOFF_CTRL                  (PMU_REG_BASE + (0x0CC << 2))
+#define PMIC_HARDWARE_CTRL0_WIFI_CLK            (1 << 5)
+#define PMIC_OSC32K_ONOFF_CTRL_EN_32K           (1 << 1)
 
+#define SCTRL_REG_BASE                          0xfff0a000
 #define SCTRL_SCFPLLCTRL0                       (SCTRL_REG_BASE + 0x120)
 #define SCTRL_SCFPLLCTRL0_FPLL0_EN              (1 << 0)
 
-#define CRG_REG_BASE                            0xFFF35000
-
+#define CRG_REG_BASE                            0xfff35000
 #define CRG_PEREN2                              (CRG_REG_BASE + 0x020)
 #define CRG_PERDIS2                             (CRG_REG_BASE + 0x024)
 #define CRG_PERCLKEN2                           (CRG_REG_BASE + 0x028)
@@ -37,5 +40,16 @@
 #define CRG_ISOEN                               (CRG_REG_BASE + 0x144)
 #define CRG_ISODIS                              (CRG_REG_BASE + 0x148)
 #define CRG_ISOSTAT                             (CRG_REG_BASE + 0x14C)
+
+#define PINMUX4_BASE				0xfff11000
+#define PINMUX4_SDDET				(PINMUX4_BASE + 0x60)
+
+#define PINCONF3_BASE				0xff37e800
+#define PINCONF3_SDCLK				(PINCONF3_BASE + 0x00)
+#define PINCONF3_SDCMD				(PINCONF3_BASE + 0x04)
+#define PINCONF3_SDDATA0			(PINCONF3_BASE + 0x08)
+#define PINCONF3_SDDATA1			(PINCONF3_BASE + 0x0c)
+#define PINCONF3_SDDATA2			(PINCONF3_BASE + 0x10)
+#define PINCONF3_SDDATA3			(PINCONF3_BASE + 0x14)
 
 #endif /*__HI3660_H__*/

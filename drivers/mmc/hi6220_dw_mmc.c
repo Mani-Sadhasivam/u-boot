@@ -56,6 +56,7 @@ static int hi6220_dwmmc_probe(struct udevice *dev)
 	dwmci_setup_cfg(&plat->cfg, host, host->bus_hz, 400000);
 	host->mmc = &plat->mmc;
 
+	host->fifo_mode = 1;
 	host->mmc->priv = &priv->host;
 	upriv->mmc = host->mmc;
 	host->mmc->dev = dev;
